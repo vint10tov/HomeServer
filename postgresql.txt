@@ -1,0 +1,6 @@
+sudo systemctl status postgresql.service // Проверка статуса сервиса
+
+Запускаем сервис:
+$ sudo systemctl start postgresql.service
+
+https://selectel.ru/blog/tutorials/how-to-install-and-use-postgresql-on-ubuntu-20-04/
