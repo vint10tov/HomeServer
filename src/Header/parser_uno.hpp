@@ -19,7 +19,7 @@ class Parser {
         uint8_t i = 0; // позиция в массиве
         uint8_t value_counter = 0; // количество значений VALUE
 
-        uint8_t value[SIZE_VALUE] {0};
+        uint32_t value[SIZE_VALUE] {0};
         Parser::Type type = Parser::Type::DEFAULT;
 
         // разбиение массива на строки, возвращает false если есть ощибки

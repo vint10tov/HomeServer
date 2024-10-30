@@ -7,7 +7,7 @@
 #include <chrono>
 #include <mutex>
 
-class UartUno {
+class UartUno final {
     private:
         static UartUno* instance;          // Указатель на единственный экземпляр
         static std::mutex mutex_uno;       // Мьютекс для защиты многопоточности
@@ -23,10 +23,8 @@ class UartUno {
         // Метод для получения единственного экземпляра класса
         static UartUno* getInstance(const char* port_name);
 
-        // Метод для чтения строки из порта
-        std::string read_string();
-        // Метод для отправки строки в порт
-        void sending_string(const std::string & str);
+        // Метод для отправки строки в порт и чтения строки из порта
+        std::string sending_string(const std::string & str);
 
         // Метод для проверки, открыт ли порт
         bool isOpen() const;

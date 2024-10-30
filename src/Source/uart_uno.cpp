@@ -56,12 +56,12 @@ bool UartUno::isOpen() const {
         return false;
 }
 
-// Метод для отправки строки в порт
-void UartUno::sending_string(const std::string & str) {
+// Метод для отправки строки в порт и чтения строки из порта
+std::string UartUno::sending_string(const std::string & str) {
+    std::lock_guard<std::mutex> lock(mutex_uno); // Защита от многопоточного доступа
     if (isOpen()) {
         // Отправляем данные на Arduino
         write(fd, str.c_str(), str.size());
-
         // Ждем немного перед чтением (можно настроить)
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
@@ -70,10 +70,6 @@ void UartUno::sending_string(const std::string & str) {
         if (bytesRead > 0) {
             buffer[bytesRead] = '\0'; // Завершаем строку
         }
+        return buffer;
     }
-}
-
-// Метод для чтения строки из порта
-std::string UartUno::read_string() {
-    return buffer;
 }
