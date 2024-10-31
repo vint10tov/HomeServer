@@ -4,7 +4,16 @@
 #include "socket.hpp"
 #include "handle_client.hpp"
 
+#include "uart_uno.hpp"
+
+// Инициализация статических член-класса
+UartUno* UartUno::instance = nullptr;
+std::mutex UartUno::mutex_uno;
+
 int main() {
+
+    // Получаем единственный экземпляр UartUno
+    UartUno* uartuno = UartUno::getInstance("/dev/ttyUSB0");
 
     int serverSocket = creating_socket_server();
     if (serverSocket > 0) {

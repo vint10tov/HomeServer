@@ -1,6 +1,7 @@
 #include <fstream>
 #include <string>
 #include <regex>
+#include <iostream>
 
 #include "text_response.hpp"
 

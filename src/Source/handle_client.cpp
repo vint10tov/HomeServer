@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <fstream>
 #include <string>
+#include <string.h>
 #include <mutex>
 
 #include "handle_client.hpp"
@@ -13,7 +14,7 @@
 void handleClient(int clientSocket) {
 
     std::mutex coutMutex; // Мьютекс для синхронизации вывода в консоль
-    char buffer[BUFFER_SIZE];
+    char buffer[BUFFER_SIZE] = {0};
     std::string request_body; // тело запроса
     std::string response_body; // тело ответа
     std::string request_headers; // заголовки запроса
@@ -21,12 +22,20 @@ void handleClient(int clientSocket) {
 
     // Чтение данных из сокета
     int bytes_read = recv(clientSocket, buffer, BUFFER_SIZE - 1, 0);
-    if (bytes_read <= 0) {
-        std::cerr << "Ошибка при приеме данных." << std::endl;
+    if (bytes_read > 0) {
+        buffer[bytes_read] = '\0'; // Завершение строки
+    } else if (bytes_read == 0) {
+        buffer[0] = '\0'; // Завершение строки
+        std::lock_guard<std::mutex> lock(coutMutex);
+        std::cerr << "Соединение закрыто удаленным хостом." << std::endl;
+        return;
+    } else {
+        buffer[0] = '\0'; // Завершение строки
+        std::lock_guard<std::mutex> lock(coutMutex);
+        std::cerr << "Ошибка при получении данных." << std::endl;
         close(clientSocket);
         return;
     }
-    buffer[bytes_read] = '\0'; // Завершение строки
 
     Request req_hed(buffer, bytes_read);
 
@@ -37,8 +46,16 @@ void handleClient(int clientSocket) {
             response_body = respons_class.GET_response_body();
         }
             break;
-        case Request::Method::POST:
-            //Response respons_class
+        case Request::Method::POST: {
+            Response respons_class(req_hed);
+            int body = req_hed.GET_begin_request_body();
+            request_body.assign(buffer + body, bytes_read);
+            std::lock_guard<std::mutex> lock(coutMutex); // для отладки
+            std::cout << request_body << std::endl; // для отладки
+            // вызов парсера для тела запроса
+            response_headers = respons_class.GET_result_headers();
+            response_body = respons_class.GET_response_body();
+        }
             break;
         case Request::Method::HEAD:
             break;

@@ -71,5 +71,7 @@ std::string UartUno::sending_string(const std::string & str) {
             buffer[bytesRead] = '\0'; // Завершаем строку
         }
         return buffer;
+    } else {
+        return "ERROR UART";
     }
 }

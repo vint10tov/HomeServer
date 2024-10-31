@@ -51,11 +51,11 @@ bool Response::isValidUrl(const std::string& url){
 // парсер url и настройка параметров
 void Response::pars_url(std::string& url, Response::TypeURL & type_url) {
     if (url == "/") {
-        url = PATH + "html/index.html";
+        url = PATH + "/html/index.html";
         type_url = TypeURL::TEXT;
         response_headers += (Content_Type + text_html);
     } else if (url == "/favicon.ico") {
-        url = PATH + "image/favicon.ico";
+        url = PATH + "/image/favicon.ico";
         type_url = TypeURL::FILE;
         response_headers += (Content_Type + image_icon);
     } else if (url.compare(0, 7, "/image/") == 0) {
@@ -80,7 +80,7 @@ void Response::pars_url(std::string& url, Response::TypeURL & type_url) {
         type_url = TypeURL::TEXT;
         response_headers += (Content_Type + text_js);
     } else {
-        std::string temp = PATH + url + ".html";
+        std::string temp = PATH + "/html" + url + ".html";
         url = temp;
         type_url = TypeURL::TEXT;
         response_headers += (Content_Type + text_html);

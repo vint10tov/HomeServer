@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNO</title>
+</head>
+<body>
+    <h1>Управление UNO</h1>
+    
+    <h2>Текущее время UNO: 22:13</h2>
+    
+    <h3>Уличное освещение</h3>
+    <form action="relay" method="POST">
+        <button 
+            type="submit" 
+            name="relay0" 
+            value="on" 
+            class="button on">ON</button>
+        <button 
+            type="submit" 
+            name="relay0" 
+            value="off" 
+            class="button off">OFF</button>
+    </form>
+    <h3>Подогрев двигателя</h3>
+    <form action="relay" method="POST">
+        <button 
+            type="submit"
+            name="relay1" 
+            value="on"
+            class="button on">ON</button>
+        <button 
+            type="submit" 
+            name="relay1" 
+            value="off" 
+            class="button off">OFF</button>
+        <button
+            type="submit" 
+            name="relay1" 
+            value="30min"
+            class="button on">on 30 min</button>
+        <button 
+            type="submit" 
+            name="relay1" 
+            value="60min"
+            class="button on">on 60 min</button>
+        <button 
+            type="submit" 
+            name="relay1" 
+            value="90min"
+            class="button on">on 90 min</button>
+    </form>
+    
+    <h3>Гирлянды</h3>
+    <form action="relay" method="POST">
+        <button 
+            type="submit" 
+            name="relay2" 
+            value="on" 
+            class="button on">ON</button>
+        <button 
+            type="submit" 
+            name="relay2" 
+            value="off" 
+            class="button off">OFF</button>
+    </form>
+
+    <h3>Режим гирлянд №1</h3>
+    <form action="relay" method="POST">
+        <p>Время включения: 18:00</p>
+        <p></p>Время выключения: 01:00</p>
+        <p></p>Повтор: OFF</p>
+        <button 
+            type="submit" 
+            name="relay2mod0" 
+            value="act"
+            class="button2 act">активировать</button>
+            <button 
+            type="submit" 
+            name="relay2mod0" 
+            value="deact"
+            class="button2 deact">деактивировать</button>
+    </form>
+    <form action="relay" method="POST">
+        <label>Часы ON: <input type="number" name="houron" min="0" max="23" placeholder="чч"></label>
+        <label>Минуты ON: <input type="number" name="minuteon" min="0" max="59" placeholder="мм"></label>
+        <label>Часы OFF: <input type="number" name="houroff" min="0" max="23" placeholder="чч"></label>
+        <label>Минуты OFF: <input type="number" name="minuteoff" min="0" max="59" placeholder="мм"></label>
+        <label><input type="checkbox" name="repeat"> повтор</label>
+        <button 
+            type="submit"
+            name="relay2mod0" 
+            value="time"
+            class="setup act">установить</button>
+    </form>
+    <h3>Режим гирлянд №2</h3>
+    <form action="relay" method="POST">
+        <p>Время включения: 18:00</p>
+        <p></p>Время выключения: 01:00</p>
+        <p></p>Повтор: OFF</p>
+        <button 
+            type="submit" 
+            name="relay2mod1" 
+            value="act"
+            class="button2 act">активировать</button>
+            <button 
+            type="submit" 
+            name="relay2mod1" 
+            value="deact"
+            class="button2 deact">деактивировать</button>
+    </form>
+    <form action="relay" method="POST">
+        <label>Часы ON: <input type="number" name="hour" min="0" max="23" placeholder="чч"></label>
+        <label>Минуты ON: <input type="number" name="minute" min="0" max="59" placeholder="мм"></label>
+        <label>Часы OFF: <input type="number" name="hour" min="0" max="23" placeholder="чч"></label>
+        <label>Минуты OFF: <input type="number" name="minute" min="0" max="59" placeholder="мм"></label>
+        <label><input type="checkbox" name="repeat"> повтор</label>
+        <button 
+            type="submit"
+            name="relay2mod1" 
+            value="time"
+            class="setup act">установить</button>
+    </form>
+    <h3>Установить время на UNO:</h3>
+    <form action="relay" method="POST">
+        <label>Часы: <input type="number" name="hour" min="0" max="23" placeholder="чч"></label>
+        <label>Минуты: <input type="number" name="minute" min="0" max="59" placeholder="мм"></label>
+        <label>День: <input type="number" name="day" min="1" max="31" placeholder="дд"></label>
+        <label>Месяц: <input type="number" name="month" min="1" max="12" placeholder="мм"></label>
+        <label>Год: <input type="number" name="year" min="2000" max="2100" placeholder="гггг"></label>
+        <button 
+            type="submit"
+            name="time" 
+            value="time"
+            class="setup act">установить</button>
+    </form>
+</body>
+</html>
+
+<style>
+    .button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        color: white;
+        font-size: 16px;
+        margin: 5px;
+    }
+
+    .on {
+        background-color: green;
+    }
+
+    .off {
+        background-color: red;
+    }
+
+    .button:hover {
+        opacity: 0.8;
+    }
+</style>
+
+<style>
+    .button2 {
+        padding: 5px 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        color: white;
+        font-size: 16px;
+        margin: 5px;
+    }
+
+    .act {
+        background-color: green;
+    }
+
+    .deact {
+        background-color: red;
+    }
+
+    .button:hover {
+        opacity: 0.8;
+    }
+</style>
+
+<style>
+    .setup {
+        padding: 5px 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        color: white;
+        font-size: 16px;
+        margin: 5px;
+    }
+
+    .act {
+        background-color: rgb(37, 145, 16);
+    }
+
+    .deact {
+        background-color: red;
+    }
+
+    .button:hover {
+        opacity: 0.8;
+    }
+</style>

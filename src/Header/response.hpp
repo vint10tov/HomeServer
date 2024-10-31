@@ -7,7 +7,7 @@
 
 class Response {
     public:
-        const std::string PATH = "../src/"; // каталог с файлами фронтенда
+        const std::string PATH = "../src"; // каталог с файлами фронтенда
 
         const std::string OK = "HTTP/1.1 200 Ok\n";
         const std::string FORBIDDEN = "HTTP/1.1 403 Forbidden\n";
