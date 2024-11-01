@@ -61,6 +61,22 @@ std::string replace_matches(std::string& input, UartUno* uartuno) {
                                   std::to_string(pars_mod2_1.GET_value(6));
                 }
                 break;
+            case 5:
+                if (pars_mod2_0.GET_type() == ParserUno::Type::OK) {
+                    if (pars_mod2_0.GET_value(0))
+                        replacement = "ON";
+                    else
+                        replacement = "OFF";
+                }
+                break;
+            case 6:
+                if (pars_mod2_1.GET_type() == ParserUno::Type::OK) {
+                    if (pars_mod2_1.GET_value(0))
+                        replacement = "ON";
+                    else
+                        replacement = "OFF";
+                }
+                break;
             default:
                 break;
             }
