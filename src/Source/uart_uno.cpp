@@ -1,6 +1,6 @@
 #include "uart_uno.hpp"
 
-// при создании указывается последовательный порт наприсер "/dev/ttyUSB0"
+// при создании указывается последовательный порт например "/dev/ttyUSB0"
 UartUno::UartUno(const char* & port_name) {
     const char *portname = port_name;
     fd = open(portname, O_RDWR | O_NOCTTY | O_NDELAY);

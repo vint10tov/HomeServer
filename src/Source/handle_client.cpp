@@ -9,11 +9,12 @@
 #include "handle_client.hpp"
 #include "request.hpp"
 #include "response.hpp"
+#include "parser_body_relay.hpp"
+#include "uart_uno.hpp"
 
+void handleClient(int clientSocket, UartUno* uartuno) {
 
-void handleClient(int clientSocket) {
-
-    std::mutex coutMutex; // Мьютекс для синхронизации вывода в консоль
+    std::mutex coutMutex; // Мьютекс для синхронизации потоков
     char buffer[BUFFER_SIZE] = {0};
     std::string request_body; // тело запроса
     std::string response_body; // тело ответа
@@ -50,9 +51,14 @@ void handleClient(int clientSocket) {
             Response respons_class(req_hed);
             int body = req_hed.GET_begin_request_body();
             request_body.assign(buffer + body, bytes_read);
-            std::lock_guard<std::mutex> lock(coutMutex); // для отладки
-            std::cout << request_body << std::endl; // для отладки
-            // вызов парсера для тела запроса
+            //std::lock_guard<std::mutex> lock(coutMutex); // для отладки
+            //std::cout << request_body << std::endl; // для отладки
+            if (req_hed.GET_url() == "/relay") {
+                ParserBodyRelay pbr(request_body);
+                for (size_t i = 0; i < pbr.GET_resul().size(); ++i) {
+                    uartuno->sending_string(pbr.GET_resul().at(i));
+                }
+            }
             response_headers = respons_class.GET_result_headers();
             response_body = respons_class.GET_response_body();
         }

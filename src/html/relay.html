@@ -14,41 +14,41 @@
     <form action="relay" method="POST">
         <button 
             type="submit" 
-            name="relay0" 
-            value="on" 
+            name="r0" 
+            value="1" 
             class="button on">ON</button>
         <button 
             type="submit" 
-            name="relay0" 
-            value="off" 
+            name="r0" 
+            value="0" 
             class="button off">OFF</button>
     </form>
     <h3>Подогрев двигателя</h3>
     <form action="relay" method="POST">
         <button 
             type="submit"
-            name="relay1" 
-            value="on"
+            name="r1" 
+            value="1"
             class="button on">ON</button>
         <button 
             type="submit" 
-            name="relay1" 
-            value="off" 
+            name="r1" 
+            value="0" 
             class="button off">OFF</button>
         <button
             type="submit" 
-            name="relay1" 
-            value="30min"
+            name="r1" 
+            value="30"
             class="button on">on 30 min</button>
         <button 
             type="submit" 
-            name="relay1" 
-            value="60min"
+            name="r1" 
+            value="60"
             class="button on">on 60 min</button>
         <button 
             type="submit" 
-            name="relay1" 
-            value="90min"
+            name="r1" 
+            value="90"
             class="button on">on 90 min</button>
     </form>
     
@@ -56,13 +56,13 @@
     <form action="relay" method="POST">
         <button 
             type="submit" 
-            name="relay2" 
-            value="on" 
+            name="r2" 
+            value="1" 
             class="button on">ON</button>
         <button 
             type="submit" 
-            name="relay2" 
-            value="off" 
+            name="r2" 
+            value="0" 
             class="button off">OFF</button>
     </form>
 
@@ -73,25 +73,25 @@
         <p></p>Повтор: OFF</p>
         <button 
             type="submit" 
-            name="relay2mod0" 
-            value="act"
+            name="r2m0" 
+            value="1"
             class="button2 act">активировать</button>
             <button 
             type="submit" 
-            name="relay2mod0" 
-            value="deact"
+            name="r2m0" 
+            value="0"
             class="button2 deact">деактивировать</button>
     </form>
     <form action="relay" method="POST">
-        <label>Часы ON: <input type="number" name="houron" min="0" max="23" placeholder="чч"></label>
-        <label>Минуты ON: <input type="number" name="minuteon" min="0" max="59" placeholder="мм"></label>
-        <label>Часы OFF: <input type="number" name="houroff" min="0" max="23" placeholder="чч"></label>
-        <label>Минуты OFF: <input type="number" name="minuteoff" min="0" max="59" placeholder="мм"></label>
-        <label><input type="checkbox" name="repeat"> повтор</label>
+        <label>Часы ON: <input type="number" name="h.on.r2m0" min="0" max="23" placeholder="чч"></label>
+        <label>Минуты ON: <input type="number" name="m.on.r2m0" min="0" max="59" placeholder="мм"></label>
+        <label>Часы OFF: <input type="number" name="h.off.r2m0" min="0" max="23" placeholder="чч"></label>
+        <label>Минуты OFF: <input type="number" name="m.off.r2m0" min="0" max="59" placeholder="мм"></label>
+        <label><input type="checkbox" name="r.r2m0"> повтор</label>
         <button 
             type="submit"
-            name="relay2mod0" 
-            value="time"
+            name="" 
+            value=""
             class="setup act">установить</button>
     </form>
     <h3>Режим гирлянд №2</h3>
@@ -101,25 +101,25 @@
         <p></p>Повтор: OFF</p>
         <button 
             type="submit" 
-            name="relay2mod1" 
-            value="act"
+            name="r2m1" 
+            value="1"
             class="button2 act">активировать</button>
             <button 
             type="submit" 
-            name="relay2mod1" 
-            value="deact"
+            name="r2m1" 
+            value="0"
             class="button2 deact">деактивировать</button>
     </form>
     <form action="relay" method="POST">
-        <label>Часы ON: <input type="number" name="hour" min="0" max="23" placeholder="чч"></label>
-        <label>Минуты ON: <input type="number" name="minute" min="0" max="59" placeholder="мм"></label>
-        <label>Часы OFF: <input type="number" name="hour" min="0" max="23" placeholder="чч"></label>
-        <label>Минуты OFF: <input type="number" name="minute" min="0" max="59" placeholder="мм"></label>
-        <label><input type="checkbox" name="repeat"> повтор</label>
+        <label>Часы ON: <input type="number" name="h.on.r2m1" min="0" max="23" placeholder="чч"></label>
+        <label>Минуты ON: <input type="number" name="m.on.r2m1" min="0" max="59" placeholder="мм"></label>
+        <label>Часы OFF: <input type="number" name="h.off.r2m1" min="0" max="23" placeholder="чч"></label>
+        <label>Минуты OFF: <input type="number" name="m.off.r2m1" min="0" max="59" placeholder="мм"></label>
+        <label><input type="checkbox" name="r.r2m1"> повтор</label>
         <button 
             type="submit"
-            name="relay2mod1" 
-            value="time"
+            name="" 
+            value=""
             class="setup act">установить</button>
     </form>
     <h3>Установить время на UNO:</h3>
@@ -131,8 +131,8 @@
         <label>Год: <input type="number" name="year" min="2000" max="2100" placeholder="гггг"></label>
         <button 
             type="submit"
-            name="time" 
-            value="time"
+            name="" 
+            value=""
             class="setup act">установить</button>
     </form>
 </body>

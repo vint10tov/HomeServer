@@ -3,7 +3,6 @@
 
 #include "socket.hpp"
 #include "handle_client.hpp"
-
 #include "uart_uno.hpp"
 
 // Инициализация статических член-класса
@@ -21,7 +20,7 @@ int main() {
             int clientSocket = creating_socket_client(serverSocket);
             if (clientSocket > 0) {
                 // Создаем новый поток для обработки клиента
-                std::thread clientThread(handleClient, clientSocket);
+                std::thread clientThread(handleClient, clientSocket, uartuno);
                 // Отделяем поток, чтобы он работал независимо
                 clientThread.detach();
             }
