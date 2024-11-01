@@ -11,6 +11,7 @@
 #include "response.hpp"
 #include "parser_body_relay.hpp"
 #include "uart_uno.hpp"
+#include "template_relay.hpp"
 
 void handleClient(int clientSocket, UartUno* uartuno) {
 
@@ -44,7 +45,12 @@ void handleClient(int clientSocket, UartUno* uartuno) {
         case Request::Method::GET: {
             Response respons_class(req_hed);
             response_headers = respons_class.GET_result_headers();
-            response_body = respons_class.GET_response_body();
+            if (req_hed.GET_url() == "/relay") {
+                std::string temp = respons_class.GET_response_body();
+                response_body = replace_matches(temp, uartuno);
+            } else {
+                response_body = respons_class.GET_response_body();
+            }
         }
             break;
         case Request::Method::POST: {
@@ -60,7 +66,12 @@ void handleClient(int clientSocket, UartUno* uartuno) {
                 }
             }
             response_headers = respons_class.GET_result_headers();
-            response_body = respons_class.GET_response_body();
+            if (req_hed.GET_url() == "/relay") {
+                std::string temp = respons_class.GET_response_body();
+                response_body = replace_matches(temp, uartuno);
+            } else {
+                response_body = respons_class.GET_response_body();
+            }
         }
             break;
         case Request::Method::HEAD:

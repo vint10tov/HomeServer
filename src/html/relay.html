@@ -8,7 +8,7 @@
 <body>
     <h1>Управление UNO</h1>
     
-    <h2>Текущее время UNO: 22:13</h2>
+    <h2>Текущее время UNO #[0]</h2><!-- gt/tm//; -->
     
     <h3>Уличное освещение</h3>
     <form action="relay" method="POST">
@@ -16,7 +16,7 @@
             type="submit" 
             name="r0" 
             value="1" 
-            class="button on">ON</button>
+            class="button on">ON</button><!-- gt/rl/pn//; -->
         <button 
             type="submit" 
             name="r0" 
@@ -26,15 +26,15 @@
     <h3>Подогрев двигателя</h3>
     <form action="relay" method="POST">
         <button 
+            type="submit" 
+            name="r1" 
+            value="0" 
+            class="button off">OFF</button><!-- gt/rl/pn//; -->
+        <button 
             type="submit"
             name="r1" 
             value="1"
             class="button on">ON</button>
-        <button 
-            type="submit" 
-            name="r1" 
-            value="0" 
-            class="button off">OFF</button>
         <button
             type="submit" 
             name="r1" 
@@ -58,7 +58,7 @@
             type="submit" 
             name="r2" 
             value="1" 
-            class="button on">ON</button>
+            class="button on">ON</button><!-- gt/rl/pn//; -->
         <button 
             type="submit" 
             name="r2" 
@@ -68,8 +68,8 @@
 
     <h3>Режим гирлянд №1</h3>
     <form action="relay" method="POST">
-        <p>Время включения: 18:00</p>
-        <p></p>Время выключения: 01:00</p>
+        <p>Время включения: #[1]</p><!-- gt/rl/md/=2/0//; -->
+        <p></p>Время выключения: #[2]</p>
         <p></p>Повтор: OFF</p>
         <button 
             type="submit" 
@@ -96,8 +96,8 @@
     </form>
     <h3>Режим гирлянд №2</h3>
     <form action="relay" method="POST">
-        <p>Время включения: 18:00</p>
-        <p></p>Время выключения: 01:00</p>
+        <p>Время включения: #[3]</p><!-- gt/rl/md/=2/1//; -->
+        <p></p>Время выключения: #[4]</p>
         <p></p>Повтор: OFF</p>
         <button 
             type="submit" 

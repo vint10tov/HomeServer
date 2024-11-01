@@ -1,25 +1,26 @@
 #include "parser_uno.hpp"
 
-Parser::Parser(char * buf, uint8_t sizebuf) {
-    while (i < sizebuf && buf[i] != '/' && buf[i] != '=' && error) {
-        iterat_buf(buf, sizebuf);
+ParserUno::ParserUno(std::string & bufer) {
+    uint sizebuf = bufer.size();
+    while (i < sizebuf && bufer[i] != '/' && bufer[i] != '=' && error) {
+        iterat_buf(bufer, sizebuf);
         TypeDefinition();
     }
-    if (buf[i] == '/' && error) {
+    if (bufer[i] == '/' && error) {
         return;
-    } else if (buf[i] == '=' && error) {
+    } else if (bufer[i] == '=' && error) {
         ++i;
-        while (i < sizebuf && buf[i] != '/' && error) {
-            iterat_buf(buf, sizebuf);
+        while (i < sizebuf && bufer[i] != '/' && error) {
+            iterat_buf(bufer, sizebuf);
             ValueUint();
         }
     }
-    if (buf[i] != '/')
+    if (bufer[i] != '/')
         error = false;
 }
 
-void Parser::iterat_buf(char * b, uint8_t s) {
-    uint8_t z = 0;
+void ParserUno::iterat_buf(std::string & b, uint s) {
+    uint z = 0;
     while (i < s && b[i] != '/' && z < SIZE_TEMP_BUF - 1) {
         temp[z] = b[i];
         ++i;
@@ -31,7 +32,7 @@ void Parser::iterat_buf(char * b, uint8_t s) {
     ++i;
 }
 
-void Parser::ValueUint() {
+void ParserUno::ValueUint() {
     if (value_counter < SIZE_VALUE) {
         value[value_counter] = atoi(temp);
         ++value_counter;
@@ -40,12 +41,11 @@ void Parser::ValueUint() {
     }
 }
 
-void Parser::TypeDefinition () {
+void ParserUno::TypeDefinition () {
     if (strcmp("ok", temp) == 0) {
-        type = Parser::Type::OK;
+        type = ParserUno::Type::OK;
     } else if (strcmp("er", temp) == 0) {
-        type = Parser::Type::ERROR;
+        type = ParserUno::Type::ERROR;
     } else 
         error = false;
 }
-

@@ -39,7 +39,7 @@ ParserBodyRelay::ParserBodyRelay(std::string &req_body) {
         if (key[0] == "h.on.r2m0" && count > 3) {
             resul.push_back("pt/rl/md/on/=2/0/" + std::to_string(value[1]) +
                             "/" + std::to_string(value[0]) + "/0/0//;");
-            resul.push_back("pt/rl/md/on/=2/0/" + std::to_string(value[3]) +
+            resul.push_back("pt/rl/md/of/=2/0/" + std::to_string(value[3]) +
                             "/" + std::to_string(value[2]) + "/0/0//;");
             if (count == 5) {
                 resul.push_back("pt/rl/md/rt/=2/0/1//;");
@@ -47,7 +47,7 @@ ParserBodyRelay::ParserBodyRelay(std::string &req_body) {
         } else if (key[0] == "h.on.r2m1" && count > 3) {
             resul.push_back("pt/rl/md/on/=2/1/" + std::to_string(value[1]) +
                             "/" + std::to_string(value[0]) + "/0/0//;");
-            resul.push_back("pt/rl/md/on/=2/1/" + std::to_string(value[3]) +
+            resul.push_back("pt/rl/md/of/=2/1/" + std::to_string(value[3]) +
                             "/" + std::to_string(value[2]) + "/0/0//;");
             if (count == 5) {
                 resul.push_back("pt/rl/md/rt/=2/1/1//;");
@@ -73,7 +73,10 @@ void ParserBodyRelay::parse(const std::string &req_body) {
 
         if (pos != std::string::npos) {
             k = pair.substr(0, pos);
-            v = pair.substr(pos + 1);
+            if ((pos + 1) != '\0')
+                v = pair.substr(pos + 1);
+            else
+                v = "";
         } else {
             k = pair; // Если '=' нет, то ключ - это вся строка
             v = "";   // Значение пустое
