@@ -8,48 +8,38 @@
 <body>
     <h1>Управление UNO</h1>
     
-    <h2>Текущее время UNO #[0]</h2><!-- gt/tm//; -->
+    <h2>Текущее время UNO #[0]</h2>
     
     <h3>Уличное освещение</h3>
     <form action="relay" method="POST">
         <button 
             type="submit" 
             name="r0" 
-            value="1" 
-            class="button on">ON</button><!-- gt/rl/pn//; -->
-        <button 
-            type="submit" 
-            name="r0" 
-            value="0" 
-            class="button off">OFF</button>
+            value="#[7]" 
+            class="button #[8]">#[8]</button>
     </form>
     <h3>Подогрев двигателя</h3>
     <form action="relay" method="POST">
         <button 
             type="submit" 
             name="r1" 
-            value="0" 
-            class="button off">OFF</button><!-- gt/rl/pn//; -->
-        <button 
-            type="submit"
-            name="r1" 
-            value="1"
-            class="button on">ON</button>
+            value="#[9]" 
+            class="button #[10]">#[10]</button>
         <button
             type="submit" 
             name="r1" 
             value="30"
-            class="button on">on 30 min</button>
+            class="button ON">on 30 min</button>
         <button 
             type="submit" 
             name="r1" 
             value="60"
-            class="button on">on 60 min</button>
+            class="button ON">on 60 min</button>
         <button 
             type="submit" 
             name="r1" 
             value="90"
-            class="button on">on 90 min</button>
+            class="button ON">on 90 min</button>
     </form>
     
     <h3>Гирлянды</h3>
@@ -57,30 +47,20 @@
         <button 
             type="submit" 
             name="r2" 
-            value="1" 
-            class="button on">ON</button><!-- gt/rl/pn//; -->
-        <button 
-            type="submit" 
-            name="r2" 
-            value="0" 
-            class="button off">OFF</button>
+            value="#[11]" 
+            class="button #[12]">#[12]</button>
     </form>
 
     <h3>Режим гирлянд №1</h3>
     <form action="relay" method="POST">
-        <p>Время включения: #[1]</p><!-- gt/rl/md/=2/0//; -->
+        <p>Время включения: #[1]</p>
         <p></p>Время выключения: #[2]</p>
         <p></p>Повтор: #[5]</p>
         <button 
             type="submit" 
             name="r2m0" 
-            value="1"
-            class="button2 act">активировать</button>
-            <button 
-            type="submit" 
-            name="r2m0" 
-            value="0"
-            class="button2 deact">деактивировать</button>
+            value="#[13]"
+            class="button2 #[14]">#[14]</button>
     </form>
     <form action="relay" method="POST">
         <label>Часы ON: <input type="number" name="h.on.r2m0" min="0" max="23" placeholder="чч"></label>
@@ -92,23 +72,18 @@
             type="submit"
             name="" 
             value=""
-            class="setup act">установить</button>
+            class="setup ACT">установить</button>
     </form>
     <h3>Режим гирлянд №2</h3>
     <form action="relay" method="POST">
-        <p>Время включения: #[3]</p><!-- gt/rl/md/=2/1//; -->
+        <p>Время включения: #[3]</p>
         <p></p>Время выключения: #[4]</p>
         <p></p>Повтор: #[6]</p>
         <button 
             type="submit" 
             name="r2m1" 
-            value="1"
-            class="button2 act">активировать</button>
-            <button 
-            type="submit" 
-            name="r2m1" 
-            value="0"
-            class="button2 deact">деактивировать</button>
+            value="#[15]"
+            class="button2 #[16]">#[16]</button>
     </form>
     <form action="relay" method="POST">
         <label>Часы ON: <input type="number" name="h.on.r2m1" min="0" max="23" placeholder="чч"></label>
@@ -120,7 +95,7 @@
             type="submit"
             name="" 
             value=""
-            class="setup act">установить</button>
+            class="setup ACT">установить</button>
     </form>
     <h3>Установить время на UNO:</h3>
     <form action="relay" method="POST">
@@ -133,7 +108,7 @@
             type="submit"
             name="" 
             value=""
-            class="setup act">установить</button>
+            class="setup ACT">установить</button>
     </form>
 </body>
 </html>
@@ -149,11 +124,11 @@
         margin: 5px;
     }
 
-    .on {
+    .ON {
         background-color: green;
     }
 
-    .off {
+    .OFF {
         background-color: red;
     }
 
@@ -173,11 +148,11 @@
         margin: 5px;
     }
 
-    .act {
+    .ACT {
         background-color: green;
     }
 
-    .deact {
+    .DEACT {
         background-color: red;
     }
 
@@ -197,12 +172,8 @@
         margin: 5px;
     }
 
-    .act {
+    .ACT {
         background-color: rgb(37, 145, 16);
-    }
-
-    .deact {
-        background-color: red;
     }
 
     .button:hover {
