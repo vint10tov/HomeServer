@@ -1,4 +1,5 @@
 #include "parser_uno.hpp"
+#include "logger.hpp"
 
 ParserUno::ParserUno(std::string & bufer) {
     uint sizebuf = bufer.size();
@@ -15,8 +16,10 @@ ParserUno::ParserUno(std::string & bufer) {
             ValueUint();
         }
     }
-    if (bufer[i] != '/')
+    if (bufer[i] != '/') {
         error = false;
+        Logger::error_log("ParserUno: некорректный ответ UNO");
+    }
 }
 
 void ParserUno::iterat_buf(std::string & b, uint s) {
@@ -38,6 +41,7 @@ void ParserUno::ValueUint() {
         ++value_counter;
     } else {
         error = false;
+        Logger::error_log("ParserUno: некорректное количество значений");
     }
 }
 
@@ -46,6 +50,8 @@ void ParserUno::TypeDefinition () {
         type = ParserUno::Type::OK;
     } else if (strcmp("er", temp) == 0) {
         type = ParserUno::Type::ERROR;
-    } else 
+    } else {
         error = false;
+        Logger::error_log("ParserUno: некорректный тип ответа");
+    }
 }

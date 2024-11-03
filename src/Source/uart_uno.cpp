@@ -1,4 +1,5 @@
 #include "uart_uno.hpp"
+#include "logger.hpp"
 
 // при создании указывается последовательный порт например "/dev/ttyUSB0"
 UartUno::UartUno(const char* & port_name) {
@@ -6,6 +7,7 @@ UartUno::UartUno(const char* & port_name) {
     fd = open(portname, O_RDWR | O_NOCTTY | O_NDELAY);
 
     if (fd == -1) {
+        Logger::error_log("UartUno: ошибка открытия порта");
         return;
     }
 
@@ -29,6 +31,7 @@ UartUno::UartUno(const char* & port_name) {
 
     // Сохраняем настройки
     tcsetattr(fd, TCSANOW, &options);
+    Logger::info_log("UartUno: Последовательный порт открыт");
 }
 
 // Закрытый деструктор
@@ -36,6 +39,7 @@ UartUno::~UartUno() {
     if (isOpen()) {
         // Закрываем порт
         close(fd);
+        Logger::info_log("UartUno: Последовательный порт закрыт");
     }
 }
 
@@ -72,6 +76,6 @@ std::string UartUno::sending_string(const std::string & str) {
         }
         return buffer;
     } else {
-        return "ERROR UART";
+        return "";
     }
 }

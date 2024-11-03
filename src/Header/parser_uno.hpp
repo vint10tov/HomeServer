@@ -1,3 +1,5 @@
+// класс парсинга сообщения от UNO
+
 #pragma once
 
 #include <string>
@@ -18,7 +20,7 @@ class ParserUno {
         uint i = 0; // позиция в массиве
         uint value_counter = 0; // количество значений VALUE
 
-        uint value[SIZE_VALUE] {0};
+        uint value[SIZE_VALUE] {0}; // массив значений
         ParserUno::Type type = ParserUno::Type::DEFAULT;
 
         // разбиение массива на строки, возвращает false если есть ощибки

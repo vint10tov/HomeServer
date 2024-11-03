@@ -1,11 +1,11 @@
-#include "file_response.hpp"
+#include "file_to_string.hpp"
 
-FileResponse::FileResponse(const std::string& filename) {
+FileToString::FileToString(const std::string& filename) {
 
   // Получаем информацию о файле
   if (stat(filename.c_str(), &file_stat) != 0) {
-    str_error = "Ошибка при получении информации о файле: " + filename;
     flag_error = false;
+    Logger::error_log("FileToString: Ошибка при получении информации о файле: " + filename);
     return;
   }
 
@@ -14,16 +14,16 @@ FileResponse::FileResponse(const std::string& filename) {
   std::ifstream file(filename, std::ios::binary);
     
   if (!file) {
-    str_error = "Не удалось открыть файл: " + filename;
     flag_error = false;
+    Logger::error_log("FileToString: Не удалось открыть файл: " + filename);
     return;
   }
    
   // Читаем содержимое файла в строку
   if (!file.read(&file_buffer[0], file_stat.st_size)) {
-    str_error = "Ошибка при чтении файла: " + filename;
+    Logger::error_log("FileToString: Ошибка при чтении файла: " + filename);
     flag_error = false;
   }
-
+  
   file.close();
 }

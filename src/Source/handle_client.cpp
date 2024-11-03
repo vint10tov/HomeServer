@@ -1,10 +1,8 @@
-#include <iostream>
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <fstream>
 #include <string>
 #include <string.h>
-#include <mutex>
 
 #include "handle_client.hpp"
 #include "request.hpp"

@@ -1,9 +1,11 @@
-#include <iostream>
 #include <thread>
 
 #include "socket.hpp"
 #include "handle_client.hpp"
 #include "uart_uno.hpp"
+#include "logger.hpp"
+
+const char TTY[] = "/dev/ttyUSB0";
 
 // Инициализация статических член-класса
 UartUno* UartUno::instance = nullptr;
@@ -12,7 +14,7 @@ std::mutex UartUno::mutex_uno;
 int main() {
 
     // Получаем единственный экземпляр UartUno
-    UartUno* uartuno = UartUno::getInstance("/dev/ttyUSB0");
+    UartUno* uartuno = UartUno::getInstance(TTY);
 
     int serverSocket = creating_socket_server();
     if (serverSocket > 0) {
@@ -28,7 +30,7 @@ int main() {
     }
 
     close(serverSocket);
-    std::cout << "Close Server Socket" << std::endl;
+    Logger::info_log("Close Server Socket");
 
     return 0;
 }
