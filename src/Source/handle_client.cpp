@@ -11,7 +11,7 @@
 #include "uart_uno.hpp"
 #include "template_relay.hpp"
 
-void handleClient(int clientSocket, UartUno* uartuno) {
+void handleClient(std::shared_ptr<ClientSocket> client_socket, UartUno* uartuno) {
 
     std::mutex coutMutex; // Мьютекс для синхронизации потоков
     char buffer[BUFFER_SIZE] = {0};
@@ -133,8 +133,6 @@ void handleClient(int clientSocket, UartUno* uartuno) {
         std::cout << "Отправляем ответ клиенту:\n" << std::endl;
         std::cout << response_headers << std::endl;
     }
+    // Отправляем ответ клиенту
     send(clientSocket, response.c_str(), response.size(), 0);
-
-    // Закрываем сокет
-    close(clientSocket);
 }
