@@ -1,10 +1,11 @@
 #include "uart_uno.hpp"
 #include "logger.hpp"
 
+std::mutex UartUno::mutex_uno;
+
 // при создании указывается последовательный порт например "/dev/ttyUSB0"
-UartUno::UartUno(const char* & port_name) {
-    const char *portname = port_name;
-    fd = open(portname, O_RDWR | O_NOCTTY | O_NDELAY);
+UartUno::UartUno() {
+    fd = open(port_name, O_RDWR | O_NOCTTY | O_NDELAY);
 
     if (fd == -1) {
         Logger::error_log("UartUno: ошибка открытия порта");
@@ -39,15 +40,16 @@ UartUno::~UartUno() {
     if (isOpen()) {
         // Закрываем порт
         close(fd);
+        delete instance;
         Logger::info_log("UartUno: Последовательный порт закрыт");
     }
 }
 
 // Метод для получения единственного экземпляра класса
-UartUno* UartUno::getInstance(const char* port_name) {
+UartUno* UartUno::getInstance() {
     std::lock_guard<std::mutex> lock(mutex_uno); // Защита от многопоточного доступа
     if (instance == nullptr) {
-        instance = new UartUno(port_name);
+        instance = new UartUno();
     }
     return instance;
 }
@@ -65,7 +67,11 @@ std::string UartUno::sending_string(const std::string & str) {
     std::lock_guard<std::mutex> lock(mutex_uno); // Защита от многопоточного доступа
     if (isOpen()) {
         // Отправляем данные на Arduino
-        write(fd, str.c_str(), str.size());
+        ssize_t result = write(fd, str.c_str(), str.size());
+        if (result == -1) {
+            // Обработка ошибки
+            Logger::error_log("UartUno: Write error");
+        }
         // Ждем немного перед чтением (можно настроить)
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
 

@@ -1,138 +1,58 @@
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <fstream>
-#include <string>
-#include <string.h>
-
 #include "handle_client.hpp"
-#include "request.hpp"
-#include "response.hpp"
+#include "template_relay.hpp"
 #include "parser_body_relay.hpp"
 #include "uart_uno.hpp"
-#include "template_relay.hpp"
 
-void handleClient(std::shared_ptr<ClientSocket> client_socket, UartUno* uartuno) {
-
-    std::mutex coutMutex; // Мьютекс для синхронизации потоков
-    char buffer[BUFFER_SIZE] = {0};
-    std::string request_body; // тело запроса
-    std::string response_body; // тело ответа
-    std::string request_headers; // заголовки запроса
-    std::string response_headers; // заголовки ответа
-
+handleClientBase::handleClientBase(std::shared_ptr<ClientSocket> client_socket, UartUno * uartuno) {
+    this->uartuno = uartuno;
+    this->client_socket = client_socket;
     // Чтение данных из сокета
-    int bytes_read = recv(clientSocket, buffer, BUFFER_SIZE - 1, 0);
-    if (bytes_read > 0) {
-        buffer[bytes_read] = '\0'; // Завершение строки
-    } else if (bytes_read == 0) {
-        buffer[0] = '\0'; // Завершение строки
-        std::lock_guard<std::mutex> lock(coutMutex);
-        std::cerr << "Соединение закрыто удаленным хостом." << std::endl;
-        return;
+    if (client_socket->IsOpen()) {
+        client_socket->reading_data_socket(buffer);
+        // запрос
+        request = new Request(buffer, BUFFER_SIZE);
+        // ответ
+        response = new Response();
+        // получено сообщение от клиента
+        Logger::debug_log("handleClientBase: Получено сообщение от клиента");
+        request->Show_RequestHeders();
+        if (request->GET_url() == "/relay") {
+            relay();
+        } else {
+            response->SET_status_code_500();
+        }
+        sending_response_client();
+    }
+}
+
+handleClientBase::~handleClientBase() {
+    if (request != nullptr)
+        delete request;
+    if (response != nullptr)
+        delete response;
+}
+
+// отправка ответа клиенту
+void handleClientBase::sending_response_client() {
+    client_socket->writing_data_socket(response->GET_result());
+}
+
+void handleClientBase::relay() {
+    if (request->GET_method()  == Request::Method::GET) {
+        response->SET_status_code_200();
+        response->SET_headlines(Content_Type, text_html);
+        response->Upload_text_file(std::string(PATH) + std::string(RELAY_HTML), uartuno, TemplateHTML::replace_matches);
+    } else if (request->GET_method()  == Request::Method::POST) {
+        std::string body = request->reading_request_body();
+        //Logger::debug_log("handleClientBase: " + body);
+        ParserBodyRelay pbr(body);
+        for (size_t i = 0; i < pbr.GET_resul().size(); ++i) {
+            UartUno::getInstance()->sending_string(pbr.GET_resul().at(i));
+        }
+        response->SET_status_code_200();
+        response->SET_headlines(Content_Type, text_html);
+        response->Upload_text_file(std::string(PATH) + std::string(RELAY_HTML), uartuno, TemplateHTML::replace_matches);
     } else {
-        buffer[0] = '\0'; // Завершение строки
-        std::lock_guard<std::mutex> lock(coutMutex);
-        std::cerr << "Ошибка при получении данных." << std::endl;
-        close(clientSocket);
-        return;
+        //
     }
-
-    Request req_hed(buffer, bytes_read);
-
-    switch (req_hed.GET_method()) {
-        case Request::Method::GET: {
-            Response respons_class(req_hed);
-            response_headers = respons_class.GET_result_headers();
-            if (req_hed.GET_url() == "/relay") {
-                std::string temp = respons_class.GET_response_body();
-                response_body = replace_matches(temp, uartuno);
-            } else {
-                response_body = respons_class.GET_response_body();
-            }
-        }
-            break;
-        case Request::Method::POST: {
-            Response respons_class(req_hed);
-            int body = req_hed.GET_begin_request_body();
-            request_body.assign(buffer + body, bytes_read);
-            //std::lock_guard<std::mutex> lock(coutMutex); // для отладки
-            //std::cout << request_body << std::endl; // для отладки
-            if (req_hed.GET_url() == "/relay") {
-                ParserBodyRelay pbr(request_body);
-                for (size_t i = 0; i < pbr.GET_resul().size(); ++i) {
-                    uartuno->sending_string(pbr.GET_resul().at(i));
-                }
-            }
-            response_headers = respons_class.GET_result_headers();
-            if (req_hed.GET_url() == "/relay") {
-                std::string temp = respons_class.GET_response_body();
-                response_body = replace_matches(temp, uartuno);
-            } else {
-                response_body = respons_class.GET_response_body();
-            }
-        }
-            break;
-        case Request::Method::HEAD:
-            break;
-        case Request::Method::PUT:
-            break;
-        case Request::Method::DELETE:
-            break;
-        case Request::Method::OPTIONS:
-            break;
-        case Request::Method::PATCH:
-            break;
-        default:
-            break;
-    }
-
-
-    // Открываем файл для записи
-    //std::ofstream outputFile("output.txt", std::ios::app);
-    //if (!outputFile) {
-    //    std::cerr << "Не удалось открыть файл для записи." << std::endl;
-    //}
-
-    // Записываем строку в файл
-    // outputFile << buffer;
-
-    // Закрываем файл
-    // outputFile.close();
-
-    /* Чтение данных из сокета
-    while (true) {
-        int bytes_read = recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
-        if (bytes_read < 0) {
-            std::cerr << "Ошибка при приеме данных." << std::endl;
-            close(clientSocket);
-            break;
-        }
-        if (bytes_read == 0) {
-            break; // Завершение чтения данных
-        }
-
-        buffer[bytes_read] = '\0'; // Завершение строки
-        request.append(buffer);
-        
-        // Проверка на окончание заголовков
-        if (request.find("\r\n\r\n") != std::string::npos) {
-            break; // Заголовки завершены
-        }
-    }*/
-
-    {
-        std::lock_guard<std::mutex> lock(coutMutex);
-        std::cout << "Получено сообщение от клиента:\n" << std::endl;
-        req_hed.Show_RequestHeders();
-    }
-
-    // Отправляем ответ клиенту
-    std::string response = response_headers + response_body;
-    {
-        std::lock_guard<std::mutex> lock(coutMutex);
-        std::cout << "Отправляем ответ клиенту:\n" << std::endl;
-        std::cout << response_headers << std::endl;
-    }
-    // Отправляем ответ клиенту
-    send(clientSocket, response.c_str(), response.size(), 0);
 }

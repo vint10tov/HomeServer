@@ -1,5 +1,6 @@
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <sstream>
 
 #include "server_socket.hpp"
 #include "logger.hpp"
@@ -13,6 +14,8 @@ ServerSocket::ServerSocket() {
         return;
     }
 
+    // хранения адресной информации для IPv4
+    sockaddr_in serverAddr{};
     // протоколы IPv4
     serverAddr.sin_family = AF_INET; 
     // сервер будет принимать соединения на всех доступных интерфейсах
@@ -35,12 +38,16 @@ ServerSocket::ServerSocket() {
         return;
     }
 
-    Logger::info_log("Socket: Сервер запущен на порту " + PORT);
+    // Переопределяем строку через ostringstream
+    std::ostringstream os;
+    os << "Socket: Сервер запущен на порту " << PORT;
+    Logger::info_log(os.str());
 }
 
 ServerSocket::~ServerSocket() {
     if (IsOpen()) {
         close(descriptor_server_socket);
+        delete instance;
         Logger::info_log("Socket: Close Server Socket");
     }
 }

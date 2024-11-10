@@ -2,44 +2,38 @@
 # pragma once
 
 #include <string>
+#include <vector>
+#include <functional>
 
-#include "request.hpp"
+#include "uart_uno.hpp"
+
+const char OK[] = "HTTP/1.1 200 Ok\n";
+const char FORBIDDEN[] = "HTTP/1.1 403 Forbidden\n";
+const char NOT_FOUND[] = "HTTP/1.1 404 Not_Found\n";
+const char SERVER_ERROR[] = "HTTP/1.1 500 Internal_Server_Error\n";
+
+const char Content_Length[] = "Content-Length";
 
 class Response {
     public:
-        const std::string PATH = "../src"; // каталог с файлами фронтенда
-
-        const std::string OK = "HTTP/1.1 200 Ok\n";
-        const std::string FORBIDDEN = "HTTP/1.1 403 Forbidden\n";
-        const std::string NOT_FOUND = "HTTP/1.1 404 Not_Found\n";
-        const std::string SERVER_ERROR = "HTTP/1.1 500 Internal_Server_Error\n";
-
-        const std::string Content_Type = "Content-Type: ";
-            const std::string text_html = "text/html\n";
-            const std::string text_css = "text/css\n";
-            const std::string text_js = "text/js\n";
-            const std::string image_icon = "image/x-icon\n";
-            const std::string image_jpeg = "image/jpeg\n";
-
-        const std::string Content_Length = "Content-Length: ";
-
-        enum class TypeURL {
-            TEXT, FILE, ERROR
-        };
-
-        Response(Request & request_class);
-        //Response(Request & request_class, RequestBody & req_body_class);
+        enum class StatusCode {OK, FORBIDDEN, NOT_FOUND, SERVER_ERROR};
+        
+        Response() {}
         ~Response() {}
         // получение итогового ответа
-        std::string GET_result_headers() {return result_headers;}
-        std::string GET_response_body() {return response_body;}
+        std::string GET_result();
+        void SET_status_code_200();
+        void SET_status_code_403();
+        void SET_status_code_404();
+        void SET_status_code_500();
+        void SET_headlines(std::string key, std::string value);
+        void Upload_text_file(std::string file_name);
+        void Upload_text_file(std::string file_name, UartUno * uartuno,std::function<std::string(std::string&, UartUno*)> func);
+        void Upload_binary_file(std::string file_name);
     private:
-        std::string response_body; // тело ответа
-        std::string response_headers; // заголовки ответа
-        std::string cod; // статус код
-        std::string result_headers; // итоговый ответ
-        // проверка валидности url
-        bool isValidUrl(const std::string& url);
-        // парсер url и настройка параметров
-        void pars_url(std::string& url, Response::TypeURL & type_url);
+        std::string response_body = ""; 
+        std::string response_headers;
+        StatusCode status_code;
+        // заголовки ответа
+        std::vector<std::string> headlines;
 };

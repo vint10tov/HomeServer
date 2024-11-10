@@ -3,12 +3,11 @@
 #include <mutex>
 #include <string>
 
-const char INFO_green_begin[] = "\032[1;32m";
-const char INFO_green_end[] = "\032[0m";
-const char WARN_yellow_begin[] = "\033[1;32m";
-const char WARN_yellow_end[] = "\033[0m";
-const char ERROR_red_begin[] = "\031[1;32m";
-const char ERROR_red_end[] = "\031[0m";
+// Коды цветов
+const std::string RESET = "\033[0m";
+const std::string RED = "\033[31m";
+const std::string GREEN = "\033[32m";
+const std::string YELLOW = "\033[33m";
 
 class Logger {
     public:

@@ -1,8 +1,8 @@
 #include "client_socket.hpp"
 
 // принятие подключения
-ClientSocket::ClientSocket(ServerSocket* server_socket) {
-    descriptor_server_socket = server_socket->GET_descriptor_server_socket();
+ClientSocket::ClientSocket() {
+    descriptor_server_socket = ServerSocket::getInstance()->GET_descriptor_server_socket();
     descriptor_client_socket = accept(descriptor_server_socket, nullptr, nullptr);
     if (descriptor_client_socket < 0) {
         Logger::warn_log("Socket: Ошибка при принятии подключения.");
@@ -34,6 +34,8 @@ bool ClientSocket::reading_data_socket(char * buffer) {
 }
 
 // Отправляем ответ клиенту
-void ClientSocket::writing_data_socket(std::string & response) {
+void ClientSocket::writing_data_socket(std::string response) {
+    Logger::debug_log("ClientSocket: Отправляем ответ клиенту");
+    Logger::debug_log(response);
     send(descriptor_client_socket, response.c_str(), response.size(), 0);
 }

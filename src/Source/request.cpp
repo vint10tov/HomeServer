@@ -4,6 +4,8 @@
 #include "request.hpp"
 
 Request::Request(char * buffer, int bytes_read) {
+    this->buffer = buffer;
+    this->bytes_read = bytes_read;
 
     // определение метода запроса
     if (strncmp(buffer, "GET", 3) == 0) method = Method::GET;
@@ -99,18 +101,23 @@ std::string Request::GET_headlines(const std::string& key) const {
 
 void Request::Show_RequestHeders() const {
     switch (method) {
-        case Method::GET:    std::cout << "GET"; break;
-        case Method::POST:   std::cout << "POST"; break;
-        case Method::HEAD:   std::cout << "HEAD"; break;
-        case Method::PUT:    std::cout << "PUT"; break;
-        case Method::DELETE: std::cout << "DELETE"; break;
-        case Method::OPTIONS:std::cout << "OPTIONS"; break;
-        case Method::PATCH:  std::cout << "PATCH"; break;
-        case Method::ERROR:  std::cout << "ERROR"; break;
+        case Method::GET:    Logger::debug_log("GET"); break;
+        case Method::POST:   Logger::debug_log("POST"); break;
+        case Method::HEAD:   Logger::debug_log("HEAD"); break;
+        case Method::PUT:    Logger::debug_log("PUT"); break;
+        case Method::DELETE: Logger::debug_log("DELETE"); break;
+        case Method::OPTIONS:Logger::debug_log("OPTIONS"); break;
+        case Method::PATCH:  Logger::debug_log("PATCH"); break;
+        case Method::ERROR:  Logger::debug_log("ERROR"); break;
     }
-    std::cout << " " << url << " " << version << std::endl;
+    Logger::debug_log(url + " " + version);
     for (const auto& pair : headlines) {
-        std::cout << pair.first << ": " << pair.second << std::endl;
+        Logger::debug_log(pair.first + ": " + pair.second);
     }
-    std::cout << std::endl;
+}
+
+std::string Request::reading_request_body() {
+    std::string request_body;
+    request_body.assign(buffer + begin_request_body, bytes_read);
+    return request_body;
 }

@@ -1,11 +1,13 @@
+#include <memory>
+
 #include "uno.hpp"
 #include "logger.hpp"
 #include "parser_uno.hpp"
 
-UNO::UNO(UartUno* uartuno) {
+UNO::UNO(UartUno * uartuno) {
     // если последовательный порт открыт
     if (uartuno->isOpen()) {
-        std::string ping = uartuno->sending_string(get_ping);
+        std::string ping = uartuno->sending_string(u_get_ping);
         ParserUno pars_uno(ping);
         if (pars_uno.GET_error()) {
             Logger::info_log("UNO: ping = " + pars_uno.GET_value(0));
@@ -16,13 +18,13 @@ UNO::UNO(UartUno* uartuno) {
         return;
     }
     // запрос всех параметров у UNO
-    std::string time = uartuno->sending_string(get_time);
+    std::string time = uartuno->sending_string(u_get_time);
     ParserUno pars_time(time);
-    std::string relay_stat = uartuno->sending_string(get_relay);
+    std::string relay_stat = uartuno->sending_string(u_get_relay);
     ParserUno pars_relay(relay_stat);
-    std::string mod2_0 = uartuno->sending_string(get_mod2_0);
+    std::string mod2_0 = uartuno->sending_string(u_get_mod2_0);
     ParserUno pars_mod2_0(mod2_0);
-    std::string mod2_1 = uartuno->sending_string(get_mod2_1);
+    std::string mod2_1 = uartuno->sending_string(u_get_mod2_1);
     ParserUno pars_mod2_1(mod2_1);
 
     if (pars_time.GET_type() == ParserUno::Type::OK) {

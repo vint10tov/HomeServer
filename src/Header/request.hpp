@@ -4,18 +4,23 @@
 #include <unordered_map>
 #include <string>
 
+#include "logger.hpp"
+
 class Request {
     public:
         Request(char * buffer, int bytes_read);
         ~Request() {}
         enum class Method {GET, POST, HEAD, PUT, DELETE, OPTIONS, PATCH, ERROR};
-        int GET_begin_request_body() const {return begin_request_body;}
+        //int GET_begin_request_body() const {return begin_request_body;}
         Method GET_method() const {return method;}
         const std::string & GET_url() const {return url;}
         const std::string & GET_version() const {return version;}
         std::string GET_headlines(const std::string& key) const;
         void Show_RequestHeders() const;
+        std::string reading_request_body();
     private:
+        int bytes_read;
+        char * buffer;
         // начало тела
         int begin_request_body = 0;
         // метод запроса

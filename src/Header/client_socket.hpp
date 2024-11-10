@@ -15,12 +15,13 @@ class ClientSocket {
         int descriptor_server_socket;
         int bytes_read;
     public:
-        ClientSocket(ServerSocket* server_socket);
+        ClientSocket();
         ~ClientSocket();
         bool IsOpen() {return descriptor_client_socket > 0 ? true : false;}
         // Чтение данных из сокета
         bool reading_data_socket(char * buffer);
         // Отправляем ответ клиенту
-        void writing_data_socket(std::string & response);
+        void writing_data_socket(std::string response);
         int GET_descriptor_client_socket() {return descriptor_client_socket;}
+        int GET_bytes_read() {return bytes_read;}
 };

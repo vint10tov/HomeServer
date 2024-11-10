@@ -16,14 +16,15 @@ class UartUno final {
         const char *portname;              // последовательный порт
         int fd = -1;
         char buffer[256];
+        const char port_name[13] = "/dev/ttyUSB0";
 
         // Закрытый конструктор для предотвращения создания экземпляров
-        UartUno(const char* & port_name);
+        UartUno();
         // Закрытый деструктор
         ~UartUno();
     public:
         // Метод для получения единственного экземпляра класса
-        static UartUno* getInstance(const char* port_name);
+        static UartUno* getInstance();
 
         // Метод для отправки строки в порт и чтения строки из порта
         std::string sending_string(const std::string & str);
