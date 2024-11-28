@@ -6,6 +6,7 @@
 #include <functional>
 
 #include "uart_uno.hpp"
+#include "smart_home.hpp"
 
 const char OK[] = "HTTP/1.1 200 Ok\n";
 const char FORBIDDEN[] = "HTTP/1.1 403 Forbidden\n";
@@ -28,7 +29,7 @@ class Response {
         void SET_status_code_500();
         void SET_headlines(std::string key, std::string value);
         void Upload_text_file(std::string file_name);
-        void Upload_text_file(std::string file_name, UartUno * uartuno,std::function<std::string(std::string&, UartUno*)> func);
+        void Upload_text_file(std::string file_name, SmartHome & smart_home, std::function<std::string(std::string&, SmartHome&)> func);
         void Upload_binary_file(std::string file_name);
     private:
         std::string response_body = ""; 

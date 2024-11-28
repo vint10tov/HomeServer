@@ -36,6 +36,6 @@ bool ClientSocket::reading_data_socket(char * buffer) {
 // Отправляем ответ клиенту
 void ClientSocket::writing_data_socket(std::string response) {
     Logger::debug_log("ClientSocket: Отправляем ответ клиенту");
-    Logger::debug_log(response);
+    // Logger::debug_log(response);
     send(descriptor_client_socket, response.c_str(), response.size(), 0);
 }

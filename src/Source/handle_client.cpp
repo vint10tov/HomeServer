@@ -2,6 +2,7 @@
 #include "template_relay.hpp"
 #include "parser_body_relay.hpp"
 #include "uart_uno.hpp"
+#include "smart_home.hpp"
 
 handleClientBase::handleClientBase(std::shared_ptr<ClientSocket> client_socket, UartUno * uartuno) {
     this->uartuno = uartuno;
@@ -38,21 +39,43 @@ void handleClientBase::sending_response_client() {
 }
 
 void handleClientBase::relay() {
-    if (request->GET_method()  == Request::Method::GET) {
-        response->SET_status_code_200();
-        response->SET_headlines(Content_Type, text_html);
-        response->Upload_text_file(std::string(PATH) + std::string(RELAY_HTML), uartuno, TemplateHTML::replace_matches);
-    } else if (request->GET_method()  == Request::Method::POST) {
-        std::string body = request->reading_request_body();
-        //Logger::debug_log("handleClientBase: " + body);
-        ParserBodyRelay pbr(body);
-        for (size_t i = 0; i < pbr.GET_resul().size(); ++i) {
-            UartUno::getInstance()->sending_string(pbr.GET_resul().at(i));
+    static const int SIZE_BUF = 20;
+    uint8_t bufer_in[SIZE_BUF];
+    uint8_t bufer_out[SIZE_BUF];
+    SmartHome smart_home(0);
+    
+    if (request->GET_method() == Request::Method::GET) {
+        RequestFromServer rfs;
+        rfs.SET_PING();
+        rfs.serialize(bufer_in, SIZE_BUF);
+        
+        if (!uartuno->sending_string(bufer_in, bufer_out, SIZE_BUF)) {
+            response->SET_status_code_500();
+            return;
         }
+        
+        smart_home.deserialize(bufer_out, SIZE_BUF);
         response->SET_status_code_200();
         response->SET_headlines(Content_Type, text_html);
-        response->Upload_text_file(std::string(PATH) + std::string(RELAY_HTML), uartuno, TemplateHTML::replace_matches);
+        response->Upload_text_file(std::string(PATH) + std::string(RELAY_HTML), smart_home, TemplateHTML::replace_matches);
+        
+    } else if (request->GET_method() == Request::Method::POST) {
+        std::string body = request->reading_request_body();
+        ParserBodyRelay pbr(body);
+        
+        pbr.GET_request_from_server().serialize(bufer_in, SIZE_BUF);
+        
+        if (!uartuno->sending_string(bufer_in, bufer_out, SIZE_BUF)) {
+            response->SET_status_code_500();
+            return;
+        }
+
+        smart_home.deserialize(bufer_out, SIZE_BUF);
+        response->SET_status_code_200();
+        response->SET_headlines(Content_Type, text_html);
+        response->Upload_text_file(std::string(PATH) + std::string(RELAY_HTML), smart_home, TemplateHTML::replace_matches);
+        
     } else {
-        //
+        response->SET_status_code_404();
     }
 }

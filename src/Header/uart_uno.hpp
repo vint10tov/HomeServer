@@ -8,14 +8,13 @@
 #include <thread>
 #include <chrono>
 #include <mutex>
+#include <cstdint>
 
 class UartUno final {
     private:
         static UartUno* instance;          // Указатель на единственный экземпляр
         static std::mutex mutex_uno;       // Мьютекс для защиты многопоточности
-        const char *portname;              // последовательный порт
         int fd = -1;
-        char buffer[256];
         const char port_name[13] = "/dev/ttyUSB0";
 
         // Закрытый конструктор для предотвращения создания экземпляров
@@ -27,7 +26,7 @@ class UartUno final {
         static UartUno* getInstance();
 
         // Метод для отправки строки в порт и чтения строки из порта
-        std::string sending_string(const std::string & str);
+        bool sending_string(uint8_t * buffer_in, uint8_t * buffer_out, size_t size_buffer);
 
         // Метод для проверки, открыт ли порт
         bool isOpen() const;

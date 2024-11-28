@@ -57,25 +57,24 @@ int ParserBodyRelay::parseValue(const std::string &v) const {
 // если только одно значение
 void ParserBodyRelay::count_1() {
     if (key[0] == RELAY_0) { // вкл-выкл реле 0
-        resul.push_back(POST_RELAY_0 + std::to_string(value[0]) + POST_END);
+        rfs.SET_PIN(0, (bool)value[0]);
     } else if (key[0] == RELAY_1) { // реле 1
         if (value[0] < 2) { // вкл-выкл реле 1
-            resul.push_back(POST_RELAY_1 + std::to_string(value[0]) + POST_END);
+            rfs.SET_PIN(1, (bool)value[0]);
         } else { // включение реле 1 на время в минутах
             uint hour;
             uint minute;
             time_server(hour, minute);
             hour += (value[0] / HOUR);
             minute += (value[0] % HOUR);
-            resul.push_back(POST_RELAY_1_MOD_0_OFF + std::to_string(minute) +
-                            SLASH + std::to_string(hour) + SLASH_0_1);
+            rfs.SET_PIN_MIN(1, 0, hour * HOUR + minute);
         }
     } else if (key[0] == RELAY_2) { // вкл-выкл реле 2
-        resul.push_back(POST_RELAY_2 + std::to_string(value[0]) + POST_END);
-    } else if (key[0] == RELAY_2_MOD_0) { // активация-деактивация реле 1 режим 0
-        resul.push_back(POST_RELAY_2_MOD_0_ACT + std::to_string(value[0]) + POST_END);
-    } else if (key[0] == RELAY_2_MOD_1) { // активация-деактивация реле 1 режим 1
-        resul.push_back(POST_RELAY_2_MOD_1_ACT + std::to_string(value[0]) + POST_END);
+        rfs.SET_PIN(2, (bool)value[0]);
+    } else if (key[0] == RELAY_2_MOD_0) { // активация-деактивация реле 2 режим 0
+        rfs.SET_MOD(2, 0, value[0]);
+    } else if (key[0] == RELAY_2_MOD_1) { // активация-деактивация реле 2 режим 1
+        rfs.SET_MOD(2, 1, value[0]);
     } else {
         Logger::warn_log("ParserBodyRelay: строка не корректная");
         count = 0;
@@ -85,25 +84,11 @@ void ParserBodyRelay::count_1() {
 // если больше одного значение
 void ParserBodyRelay::count_more_1() {
     if (key[0] == TIME_RELAY_0_MOD_0 && count > 3) { // установка времени реле 2 мод 0
-        resul.push_back(POST_RELAY_2_MOD_0_ON + std::to_string(value[1]) +
-                        SLASH + std::to_string(value[0]) + _0_0);
-        resul.push_back(POST_RELAY_2_MOD_0_OFF + std::to_string(value[3]) +
-                        SLASH + std::to_string(value[2]) + _0_0);
-        if (count == 5) { // активация режима 0
-            resul.push_back(POST_RELAY_2_MOD_0_ACT_ON);
-        }
+        rfs.SET_MOD_T(2, 0, value[1], value[0], value[3], value[2]);
     } else if (key[0] == TIME_RELAY_0_MOD_1 && count > 3) { // установка времени реле 2 мод 1
-        resul.push_back(POST_RELAY_2_MOD_1_ON + std::to_string(value[1]) +
-                        SLASH + std::to_string(value[0]) + _0_0);
-        resul.push_back(POST_RELAY_2_MOD_1_OFF + std::to_string(value[3]) +
-                        SLASH + std::to_string(value[2]) + _0_0);
-        if (count == 5) { // активация режима 1
-            resul.push_back(POST_RELAY_2_MOD_1_ACT_ON);
-        }
+        rfs.SET_MOD_T(2, 1, value[1], value[0], value[3], value[2]);
     } else if (key[0] == TIME && count == 5) { // установка времени UNO
-        resul.push_back(POST_TIME_UNO + std::to_string(value[1]) + "/" + 
-                        std::to_string(value[0]) + SLASH + std::to_string(value[2]) + SLASH + 
-                        std::to_string(value[3]) + SLASH + std::to_string(value[4]) + POST_END);
+        rfs.SET_TIME(value[1], value[0], value[2], value[3], value[4]);
     } else {
         Logger::warn_log("ParserBodyRelay: строка не корректная");
         count = 0;

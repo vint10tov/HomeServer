@@ -49,11 +49,11 @@ void Response::Upload_text_file(std::string file_name) {
     }
 }
 
-void Response::Upload_text_file(std::string file_name, UartUno * uartuno,std::function<std::string(std::string&, UartUno*)> func) {
+void Response::Upload_text_file(std::string file_name, SmartHome & smart_home,std::function<std::string(std::string&, SmartHome&)> func) {
     TextToString tts(file_name);
     if (tts.GET_flag_error()) {
         std::string temp = tts.GET_file_buffer();
-        response_body = func(temp, uartuno);
+        response_body = func(temp, smart_home);
         SET_headlines(Content_Length, std::to_string(response_body.size()));
     } else {
         status_code = StatusCode::SERVER_ERROR;
