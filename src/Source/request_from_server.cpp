@@ -13,9 +13,10 @@ void RequestFromServer::SET_PIN(uint8_t relay, bool on) {
     }
 }
 
-void RequestFromServer::SET_PIN_MIN(uint8_t relay, uint8_t mod, uint8_t min) {
+void RequestFromServer::SET_PIN_MIN(uint8_t relay, uint8_t mod, uint8_t hour, uint8_t min) {
     this->relay = relay;
     this->mod = mod;
+    hour_off = hour;
     min_off = min;
     flag = 2;
 }
@@ -33,6 +34,7 @@ void RequestFromServer::SET_MOD(uint8_t relay, uint8_t mod, bool on) {
 void RequestFromServer::SET_MOD_T(uint8_t relay, uint8_t mod, uint8_t on_min,
                                   uint8_t on_hour, uint8_t off_min, uint8_t off_hour) {
     this->relay = relay;
+    this->mod = mod;
     min_on = on_min;
     hour_on = on_hour;
     min_off = off_min;
@@ -65,4 +67,61 @@ bool RequestFromServer::serialize(uint8_t * buffer, uint8_t size_buffer) const {
     buffer[8] = month;
     buffer[9] = year;
     return true;
+}
+
+std::string RequestFromServer::show_request() const {
+    std::string resul;
+
+    switch (flag) {
+    case 0:
+        resul = "PING\n";
+        break;
+    case 1:
+        resul = "PIN_ON\n";
+        break;
+    case 2:
+        resul = "PIN_ON_MIN\n";
+        break;
+    case 3:
+        resul = "PIN_OFF\n";
+        break;
+    case 4:
+        resul = "MOD_ON\n";
+        break;
+    case 5:
+        resul = "MOD_OFF\n";
+        break;
+    case 6:
+        resul = "MOD_T\n";
+        break;
+    case 7:
+        resul = "TIME\n";
+        break;
+    default:
+        resul = "ERROR\n";
+        break;
+    }
+
+    resul += "Relau: ";
+    resul += std::to_string(relay);
+    resul += " Mod: ";
+    resul += std::to_string(mod);
+    resul += "\n";
+    resul += "min_on: ";
+    resul += std::to_string(min_on);
+    resul += " hour_on: ";
+    resul += std::to_string(hour_on);
+    resul += " min_off: ";
+    resul += std::to_string(min_off);
+    resul += " hour_off: ";
+    resul += std::to_string(hour_off);
+    resul += "\n";
+    resul += "day: ";
+    resul += std::to_string(day);
+    resul += " month: ";
+    resul += std::to_string(month);
+    resul += " year: ";
+    resul += std::to_string(year);
+
+    return resul;
 }

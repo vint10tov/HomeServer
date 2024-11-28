@@ -47,6 +47,7 @@ void handleClientBase::relay() {
     if (request->GET_method() == Request::Method::GET) {
         RequestFromServer rfs;
         rfs.SET_PING();
+        Logger::info_log(rfs.show_request());
         rfs.serialize(bufer_in, SIZE_BUF);
         
         if (!uartuno->sending_string(bufer_in, bufer_out, SIZE_BUF)) {
@@ -64,6 +65,7 @@ void handleClientBase::relay() {
         ParserBodyRelay pbr(body);
         
         pbr.GET_request_from_server().serialize(bufer_in, SIZE_BUF);
+        Logger::info_log(pbr.GET_request_from_server().show_request());
         
         if (!uartuno->sending_string(bufer_in, bufer_out, SIZE_BUF)) {
             response->SET_status_code_500();
