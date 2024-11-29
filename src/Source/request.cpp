@@ -111,9 +111,9 @@ void Request::Show_RequestHeders() const {
         case Method::ERROR:  Logger::debug_log("ERROR"); break;
     }
     Logger::debug_log(url + " " + version);
-    for (const auto& pair : headlines) {
-        Logger::debug_log(pair.first + ": " + pair.second);
-    }
+    //for (const auto& pair : headlines) {
+    //    Logger::debug_log(pair.first + ": " + pair.second);
+    //}
 }
 
 std::string Request::reading_request_body() {

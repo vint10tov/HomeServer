@@ -47,15 +47,20 @@ void handleClientBase::relay() {
     if (request->GET_method() == Request::Method::GET) {
         RequestFromServer rfs;
         rfs.SET_PING();
-        Logger::info_log(rfs.show_request());
-        rfs.serialize(bufer_in, SIZE_BUF);
+        if (!rfs.serialize(bufer_in, SIZE_BUF)) {
+            response->SET_status_code_500();
+            return;
+        }
         
         if (!uartuno->sending_string(bufer_in, bufer_out, SIZE_BUF)) {
             response->SET_status_code_500();
             return;
         }
         
-        smart_home.deserialize(bufer_out, SIZE_BUF);
+        if(!smart_home.deserialize(bufer_out, SIZE_BUF)) {
+            response->SET_status_code_500();
+            return;
+        }
         response->SET_status_code_200();
         response->SET_headlines(Content_Type, text_html);
         response->Upload_text_file(std::string(PATH) + std::string(RELAY_HTML), smart_home, TemplateHTML::replace_matches);
@@ -63,8 +68,16 @@ void handleClientBase::relay() {
     } else if (request->GET_method() == Request::Method::POST) {
         std::string body = request->reading_request_body();
         ParserBodyRelay pbr(body);
+
+        if (!pbr.string_out()) {
+            response->SET_status_code_500();
+            return;
+        }
         
-        pbr.GET_request_from_server().serialize(bufer_in, SIZE_BUF);
+        if (!pbr.GET_request_from_server().serialize(bufer_in, SIZE_BUF)) {
+            response->SET_status_code_500();
+            return;
+        }
         Logger::info_log(pbr.GET_request_from_server().show_request());
         
         if (!uartuno->sending_string(bufer_in, bufer_out, SIZE_BUF)) {
@@ -72,7 +85,10 @@ void handleClientBase::relay() {
             return;
         }
 
-        smart_home.deserialize(bufer_out, SIZE_BUF);
+        if(!smart_home.deserialize(bufer_out, SIZE_BUF)) {
+            response->SET_status_code_500();
+            return;
+        }
         response->SET_status_code_200();
         response->SET_headlines(Content_Type, text_html);
         response->Upload_text_file(std::string(PATH) + std::string(RELAY_HTML), smart_home, TemplateHTML::replace_matches);

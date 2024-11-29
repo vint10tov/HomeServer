@@ -72,6 +72,7 @@ bool UartUno::sending_string(uint8_t * buffer_in, uint8_t * buffer_out, size_t s
         if (result == -1) {
             // Обработка ошибки
             Logger::error_log("UartUno: Write error");
+            return false;
         }
         // Ждем немного перед чтением (можно настроить)
         std::this_thread::sleep_for(std::chrono::milliseconds(500));

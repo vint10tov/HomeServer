@@ -84,7 +84,8 @@ uint16_t SmartHome::GET_minut_off(uint8_t relay, uint8_t mod) const {
 
 bool SmartHome::deserialize(const uint8_t *buffer, uint8_t size_buffer) {
     if (size_buffer < 20) {
-        return false; // Невозможно десериализовать данные с недостаточным размером буфера
+        Logger::error_log("SmartHome: Невозможно десериализовать данные");
+        return false;
     }
     flag    = buffer[0];
     relay_0 = buffer[1];

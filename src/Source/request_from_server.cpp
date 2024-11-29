@@ -1,4 +1,5 @@
 #include "request_from_server.hpp"
+#include "logger.hpp"
 
 void RequestFromServer::SET_PING() {
     flag = 0;
@@ -54,7 +55,8 @@ void RequestFromServer::SET_TIME(uint8_t min, uint8_t hour,
 
 bool RequestFromServer::serialize(uint8_t * buffer, uint8_t size_buffer) const {
     if (size_buffer < 10) { // Минимальный размер буфера для сериализации всех полей
-        return false;       // Невозможно сериализовать данные с недостаточным размером буфера
+        Logger::error_log("RequestFromServer: Невозможно сериализовать данные");
+        return false;
     }
     buffer[0] = flag;
     buffer[1] = relay;
@@ -74,40 +76,40 @@ std::string RequestFromServer::show_request() const {
 
     switch (flag) {
     case 0:
-        resul = "PING\n";
+        resul = "RequestFromServer: PING\n";
         break;
     case 1:
-        resul = "PIN_ON\n";
+        resul = "RequestFromServer: PIN_ON\n";
         break;
     case 2:
-        resul = "PIN_ON_MIN\n";
+        resul = "RequestFromServer: PIN_ON_MIN\n";
         break;
     case 3:
-        resul = "PIN_OFF\n";
+        resul = "RequestFromServer: PIN_OFF\n";
         break;
     case 4:
-        resul = "MOD_ON\n";
+        resul = "RequestFromServer: MOD_ON\n";
         break;
     case 5:
-        resul = "MOD_OFF\n";
+        resul = "RequestFromServer: MOD_OFF\n";
         break;
     case 6:
-        resul = "MOD_T\n";
+        resul = "RequestFromServer: MOD_T\n";
         break;
     case 7:
-        resul = "TIME\n";
+        resul = "RequestFromServer: TIME\n";
         break;
     default:
-        resul = "ERROR\n";
+        resul = "RequestFromServer: ERROR\n";
         break;
     }
 
-    resul += "Relau: ";
+    resul += "RequestFromServer: Relau: ";
     resul += std::to_string(relay);
     resul += " Mod: ";
     resul += std::to_string(mod);
     resul += "\n";
-    resul += "min_on: ";
+    resul += "RequestFromServer: min_on: ";
     resul += std::to_string(min_on);
     resul += " hour_on: ";
     resul += std::to_string(hour_on);
@@ -116,7 +118,7 @@ std::string RequestFromServer::show_request() const {
     resul += " hour_off: ";
     resul += std::to_string(hour_off);
     resul += "\n";
-    resul += "day: ";
+    resul += "RequestFromServer: day: ";
     resul += std::to_string(day);
     resul += " month: ";
     resul += std::to_string(month);
