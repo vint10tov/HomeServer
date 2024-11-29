@@ -22,28 +22,28 @@ class SmartHome {
         // [2] статус relay 2 мод 0
         // [1] статус relay 2 мод 1
         // [0]
-        uint8_t flag;
+        uint8_t flag = 0;
 
-        uint8_t relay_0;
-        uint8_t relay_1;
-        uint8_t relay_2;
+        uint8_t relay_0 = 0;
+        uint8_t relay_1 = 0;
+        uint8_t relay_2 = 0;
 
         // время на плате
-        uint8_t second; 
-        uint8_t minute;
-        uint8_t hour;
-        uint8_t date;
-        uint8_t month;
-        uint8_t year; // без 2000
+        uint8_t second = 0; 
+        uint8_t minute = 0;
+        uint8_t hour = 0;
+        uint8_t date = 0;
+        uint8_t month = 0;
+        uint8_t year = 0; // без 2000
 
         // relay 1
-        uint16_t minute_off_relay_1;
+        uint16_t minute_off_relay_1 = 0;
 
         // relay 2
-        uint16_t minute_on_relay_2_mod_0;
-        uint16_t minute_off_relay_2_mod_0;
-        uint16_t minute_on_relay_2_mod_1;
-        uint16_t minute_off_relay_2_mod_1;
+        uint16_t minute_on_relay_2_mod_0 = 0;
+        uint16_t minute_off_relay_2_mod_0 = 0;
+        uint16_t minute_on_relay_2_mod_1 = 0;
+        uint16_t minute_off_relay_2_mod_1 = 0;
     public:
         SmartHome(uint8_t i = 0);
         // Запрос статуса реле
