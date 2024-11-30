@@ -13,7 +13,7 @@ ServerSocket::ServerSocket() {
         descriptor_server_socket = socket(AF_INET, SOCK_STREAM, 0);
         if (descriptor_server_socket < 0) {
             Logger::error_log("Socket: Не удалось создать сокет.");
-            std::this_thread::sleep_for(std::chrono::seconds(20)); // Ждем 20 секунд
+            std::this_thread::sleep_for(std::chrono::seconds(40)); // Ждем 40 секунд
             --count;
             continue;
         }
@@ -32,7 +32,7 @@ ServerSocket::ServerSocket() {
             Logger::error_log("Socket: Ошибка связывания сокета.");
             close(descriptor_server_socket);
             descriptor_server_socket = -1;
-            std::this_thread::sleep_for(std::chrono::seconds(20)); // Ждем 20 секунд
+            std::this_thread::sleep_for(std::chrono::seconds(40)); // Ждем 40 секунд
             --count;
             continue;
         }
@@ -41,7 +41,7 @@ ServerSocket::ServerSocket() {
             Logger::error_log("Socket: Ошибка при прослушивании порта.");
             close(descriptor_server_socket);
             descriptor_server_socket = -1;
-            std::this_thread::sleep_for(std::chrono::seconds(20)); // Ждем 20 секунд
+            std::this_thread::sleep_for(std::chrono::seconds(40)); // Ждем 40 секунд
             --count;
             continue;
         }

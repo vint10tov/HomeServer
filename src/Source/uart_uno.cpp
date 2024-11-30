@@ -16,8 +16,8 @@ UartUno::UartUno() {
     tcgetattr(fd, &options);
 
     // Устанавливаем параметры порта
-    cfsetispeed(&options, B9600); // Скорость приема
-    cfsetospeed(&options, B9600); // Скорость передачи
+    cfsetispeed(&options, B2400); // Скорость приема
+    cfsetospeed(&options, B2400); // Скорость передачи
 
     options.c_cflag |= (CLOCAL | CREAD); // Игнорируем режим управления модемом, включаем прием
     options.c_cflag &= ~PARENB; // Без контроля четности
