@@ -27,7 +27,6 @@ ServerSocket::ServerSocket() {
         // номер порта, на котором сервер будет слушать входящие соединения
         serverAddr.sin_port = htons(PORT);
 
-
         if (bind(descriptor_server_socket, (struct sockaddr*)&serverAddr, sizeof(serverAddr)) < 0) {
             Logger::error_log("Socket: Ошибка связывания сокета.");
             close(descriptor_server_socket);

@@ -75,7 +75,7 @@ void ParserBodyRelay::count_1() {
     } else if (key[0] == RELAY_2_MOD_1) { // активация-деактивация реле 2 режим 1
         rfs.SET_MOD(2, 1, value[0]);
     } else {
-        Logger::warn_log("ParserBodyRelay: строка не корректная " + key[0]);
+        Logger::warn_log("ParserBodyRelay: строка не корректная (1)" + key[0]);
         count = 0;
     }
 }
@@ -89,7 +89,7 @@ void ParserBodyRelay::count_more_1() {
     } else if (key[0] == TIME && count == 5) { // установка времени UNO
         rfs.SET_TIME(value[1], value[0], value[2], value[3], value[4]);
     } else {
-        Logger::warn_log("ParserBodyRelay: строка не корректная " + key[0]);
+        Logger::warn_log("ParserBodyRelay: строка не корректная (2)" + key[0]);
         count = 0;
     }
 }

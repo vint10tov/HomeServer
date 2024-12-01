@@ -9,7 +9,9 @@ handleClientBase::handleClientBase(std::shared_ptr<ClientSocket> client_socket, 
     this->client_socket = client_socket;
     // Чтение данных из сокета
     if (client_socket->IsOpen()) {
-        client_socket->reading_data_socket(buffer);
+        if (!client_socket->reading_data_socket(buffer)) {
+            return;
+        }
         // запрос
         request = new Request(buffer, BUFFER_SIZE);
         // ответ
@@ -39,31 +41,33 @@ void handleClientBase::sending_response_client() {
 }
 
 void handleClientBase::relay() {
-    static const int SIZE_BUF = 20;
-    uint8_t bufer_in[SIZE_BUF];
-    uint8_t bufer_out[SIZE_BUF];
+    static const int SIZE_BUF_in = 21;
+    static const int SIZE_BUF_out = 11;
+    uint8_t bufer_in[SIZE_BUF_in];
+    uint8_t bufer_out[SIZE_BUF_out];
     SmartHome smart_home(0);
     
     if (request->GET_method() == Request::Method::GET) {
         RequestFromServer rfs;
         rfs.SET_PING();
-        if (!rfs.serialize(bufer_in, SIZE_BUF)) {
+        if (!rfs.serialize(bufer_out, SIZE_BUF_out)) {
             response->SET_status_code_500();
             return;
         }
         
-        if (!uartuno->sending_string(bufer_in, bufer_out, SIZE_BUF)) {
+        if (!uartuno->sending_string(bufer_in, bufer_out, SIZE_BUF_in, SIZE_BUF_out)) {
             response->SET_status_code_500();
             return;
         }
         
-        if(!smart_home.deserialize(bufer_out, SIZE_BUF)) {
+        if(!smart_home.deserialize(bufer_in, SIZE_BUF_in)) {
             response->SET_status_code_500();
             return;
         }
         response->SET_status_code_200();
         response->SET_headlines(Content_Type, text_html);
         response->Upload_text_file(std::string(PATH) + std::string(RELAY_HTML), smart_home, TemplateHTML::replace_matches);
+        
         
     } else if (request->GET_method() == Request::Method::POST) {
         std::string body = request->reading_request_body();
@@ -74,18 +78,18 @@ void handleClientBase::relay() {
             return;
         }
         
-        if (!pbr.GET_request_from_server().serialize(bufer_in, SIZE_BUF)) {
+        if (!pbr.GET_request_from_server().serialize(bufer_out, SIZE_BUF_out)) {
             response->SET_status_code_500();
             return;
         }
         Logger::info_log(pbr.GET_request_from_server().show_request());
         
-        if (!uartuno->sending_string(bufer_in, bufer_out, SIZE_BUF)) {
+        if (!uartuno->sending_string(bufer_in, bufer_out, SIZE_BUF_in, SIZE_BUF_out)) {
             response->SET_status_code_500();
             return;
         }
-
-        if(!smart_home.deserialize(bufer_out, SIZE_BUF)) {
+        
+        if(!smart_home.deserialize(bufer_in, SIZE_BUF_in)) {
             response->SET_status_code_500();
             return;
         }

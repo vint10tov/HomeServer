@@ -21,12 +21,15 @@ class UartUno final {
         UartUno();
         // Закрытый деструктор
         ~UartUno();
+        uint8_t calculate_checksum(const uint8_t *data, size_t size) const;
+        bool verify_checksum(const uint8_t *data, size_t size) const;
     public:
         // Метод для получения единственного экземпляра класса
         static UartUno* getInstance();
 
         // Метод для отправки строки в порт и чтения строки из порта
-        bool sending_string(uint8_t * buffer_in, uint8_t * buffer_out, size_t size_buffer);
+        bool sending_string(uint8_t * buffer_in, uint8_t * buffer_out,
+                             size_t size_buffer_in, size_t size_buffer_out);
 
         // Метод для проверки, открыт ли порт
         bool isOpen() const;
