@@ -5,11 +5,14 @@ std::mutex UartUno::mutex_uno;
 
 // при создании указывается последовательный порт например "/dev/ttyUSB0"
 UartUno::UartUno() {
-    fd = open(port_name, O_RDWR | O_NOCTTY | O_NDELAY);
+    fd = open(port_name_0, O_RDWR | O_NOCTTY | O_NDELAY);
 
     if (fd == -1) {
-        Logger::error_log("UartUno: ошибка открытия порта");
-        return;
+        fd = open(port_name_1, O_RDWR | O_NOCTTY | O_NDELAY);
+        if (fd == -1) {
+            Logger::error_log("UartUno: ошибка открытия порта");
+            return;
+        }
     }
 
     struct termios options;
@@ -80,7 +83,7 @@ bool UartUno::sending_string(uint8_t * buffer_in, uint8_t * buffer_out,
             return false;
         }
         // Ждем немного перед чтением (можно настроить)
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
         
         // Чтение ответа от Arduino
         int bytesRead = read(fd, buffer_in, size_buffer_in);
