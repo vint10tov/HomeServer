@@ -15,7 +15,7 @@ class UartUno final {
         static UartUno* instance;          // Указатель на единственный экземпляр
         static std::mutex mutex_uno;       // Мьютекс для защиты многопоточности
         int fd = -1;
-        const char port_name[13] = "/dev/ttyUSB0";
+        const char port_name[13] = "/dev/ttyACM0";
 
         // Закрытый конструктор для предотвращения создания экземпляров
         UartUno();
