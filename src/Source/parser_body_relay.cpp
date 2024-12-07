@@ -5,10 +5,8 @@ ParserBodyRelay::ParserBodyRelay(std::string &body_relay) {
     count = key.size();
     if (count == 0) {
         Logger::warn_log("ParserBodyRelay: нет строк для отправки на UNO");
-    } else if (count == 1) {
-        count_1();
     } else {
-        count_more_1();
+        count_v();
     }
 }
 
@@ -55,7 +53,7 @@ int ParserBodyRelay::parseValue(const std::string &v) const {
 }
 
 // если только одно значение
-void ParserBodyRelay::count_1() {
+void ParserBodyRelay::count_v() {
     if (key[0] == RELAY_0) { // вкл-выкл реле 0
         rfs.SET_PIN(0, (bool)value[0]);
     } else if (key[0] == RELAY_1) { // реле 1
@@ -74,22 +72,14 @@ void ParserBodyRelay::count_1() {
         rfs.SET_MOD(2, 0, value[0]);
     } else if (key[0] == RELAY_2_MOD_1) { // активация-деактивация реле 2 режим 1
         rfs.SET_MOD(2, 1, value[0]);
-    } else {
-        Logger::warn_log("ParserBodyRelay: строка не корректная (1)" + key[0]);
-        count = 0;
-    }
-}
-
-// если больше одного значение
-void ParserBodyRelay::count_more_1() {
-    if (key[0] == TIME_RELAY_0_MOD_0 && count > 3) { // установка времени реле 2 мод 0
+    } else if (key[0] == TIME_RELAY_0_MOD_0 && count > 3) { // установка времени реле 2 мод 0
         rfs.SET_MOD_T(2, 0, value[1], value[0], value[3], value[2]);
     } else if (key[0] == TIME_RELAY_0_MOD_1 && count > 3) { // установка времени реле 2 мод 1
         rfs.SET_MOD_T(2, 1, value[1], value[0], value[3], value[2]);
     } else if (key[0] == TIME && count == 5) { // установка времени UNO
         rfs.SET_TIME(value[1], value[0], value[2], value[3], value[4]);
     } else {
-        Logger::warn_log("ParserBodyRelay: строка не корректная (2)" + key[0]);
+        Logger::warn_log("ParserBodyRelay: строка не корректная" + key[0]);
         count = 0;
     }
 }

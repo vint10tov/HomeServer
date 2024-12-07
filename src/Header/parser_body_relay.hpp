@@ -40,10 +40,8 @@ private:
     void parse(const std::string &body_relay);
     // преобразование значения в int
     int parseValue(const std::string &v) const;
-    // если только одно значение
-    void count_1();
-    // если больше одного значение
-    void count_more_1();
+    // 
+    void count_v();
     // функция получения времени сервера
     void time_server(uint & hour, uint & minute);
 };
